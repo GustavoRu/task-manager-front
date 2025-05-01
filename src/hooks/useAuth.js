@@ -24,13 +24,15 @@ export const useAuth = ({ middleware, url }) => {
     try {
       const { data } = await clientAxios.post("/api/Auth/login/", dataObj);
       console.log("ReponseLogin", data);
-      if(data.isSuccess){
+      if (data.isSuccess) {
         localStorage.setItem("AUTH_TOKEN", data.token);
         setErrors([]);
         // await mutate();
-      }else{
-        setErrors(Object.values(data.errors));
+        return;
       }
+      
+      setErrors([!data?.token ? "Usuario o contraseña incorrectos" : ""]);
+
     } catch (error) {
       console.log("errorLogin:", error);
       // let errors = 
