@@ -25,9 +25,9 @@ export default function Login() {
       <h1 className="text-4xl font-black text-gray-800 dark:text-white">
         Iniciar Sesión
       </h1>
-      <p className="text-gray-600 dark:text-gray-300">
+      {/* <p className="text-gray-600 dark:text-gray-300">
         Para guardar tus consultas frecuentes
-      </p>
+      </p> */}
       <div className="bg-white dark:bg-neutral-700 shadow-md rounded-md mt-10 px-5 py-10">
         <form onSubmit={handleSubmit} noValidate>
           {errors

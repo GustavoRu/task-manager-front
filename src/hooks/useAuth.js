@@ -22,24 +22,31 @@ export const useAuth = ({ middleware, url }) => {
 
   const login = async (dataObj, setErrors) => {
     try {
-      const { data } = await clientAxios.post("/api/login", dataObj);
-      console.log("RESPONSE", data);
-      localStorage.setItem("AUTH_TOKEN", data.token);
-      setErrors([]);
-      await mutate();
+      const { data } = await clientAxios.post("/api/Auth/login/", dataObj);
+      console.log("ReponseLogin", data);
+      if(data.isSuccess){
+        localStorage.setItem("AUTH_TOKEN", data.token);
+        setErrors([]);
+        // await mutate();
+      }else{
+        setErrors(Object.values(data.errors));
+      }
     } catch (error) {
+      console.log("errorLogin:", error);
+      // let errors = 
       setErrors(Object.values(error.response.data.errors));
     }
   };
 
   const register = async (dataObj, setErrors) => {
     try {
-      console.log("dataObj", dataObj);
-      const { data } = await clientAxios.post("/api/Auth/register", dataObj);
+      console.log("dataObjRegister", dataObj);
+      const { data } = await clientAxios.post("/api/Auth/register/", dataObj);
       localStorage.setItem('AUTH_TOKEN', data.token);
       setErrors([]);
-      await mutate();
+      // await mutate();
     } catch (error) {
+      console.log("error:", error);
       setErrors(Object.values(error.response.data.errors));
     }
   };

@@ -2,33 +2,33 @@ import { useEffect, useState } from "react";
 import LineChart from "../components/LineChart";
 import CurrencyBox from "../components/CurrencyBox";
 import CalculationBox from "../components/CalculationBox";
-import useInflation from "../hooks/useInflation";
+// import useInflation from "../hooks/useInflation";
 
 export default function Home(props) {
-  const { dollarRates } = useInflation(); //fines didacticos de practica con context
+  // const { dollarRates } = useInflation(); //fines didacticos de practica con context
   const [dataDollars, setDataDollars] = useState([]);
   const [dataInflation, setDataInflation] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [errorInflation, setErrorInflation] = useState(null);
 
-  const fetchDataDollars = () => {
-    fetch("https://dolarapi.com/v1/dolares")
-      .then((response) => {
-        if (!response.ok) {
-          throw new Error("Error en la petición");
-        }
-        return response.json();
-      })
-      .then((data) => {
-        setDataDollars(data);
-        setLoading(false);
-      })
-      .catch((error) => {
-        setError(error);
-        setLoading(false);
-      });
-  };
+  // const fetchDataDollars = () => {
+  //   fetch("https://dolarapi.com/v1/dolares")
+  //     .then((response) => {
+  //       if (!response.ok) {
+  //         throw new Error("Error en la petición");
+  //       }
+  //       return response.json();
+  //     })
+  //     .then((data) => {
+  //       setDataDollars(data);
+  //       setLoading(false);
+  //     })
+  //     .catch((error) => {
+  //       setError(error);
+  //       setLoading(false);
+  //     });
+  // };
 
   useEffect(() => {
     // console.log("hola", hola);
