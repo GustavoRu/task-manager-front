@@ -1,5 +1,5 @@
 import React from "react";
-import PaidIcon from "@mui/icons-material/Paid";
+import AssignmentIcon from "@mui/icons-material/Assignment";
 import { Link } from "react-router-dom";
 
 export default function Navbar() {
@@ -17,7 +17,7 @@ export default function Navbar() {
               // className="max-w-xs"
               style={{ height: "50px" }}
             /> */}
-            <PaidIcon sx={{ color: "#ffff", fontSize: "40px" }} />
+            <AssignmentIcon sx={{ color: "#ffff", fontSize: "40px" }} />
           </a>
         </div>
 

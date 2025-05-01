@@ -1,5 +1,5 @@
 import { Outlet } from "react-router-dom";
-import PaidIcon from '@mui/icons-material/Paid';
+import AssignmentIcon from '@mui/icons-material/Assignment';
 
 export default function AuthLayout() {
   return (
@@ -10,7 +10,7 @@ export default function AuthLayout() {
         className="max-w-xs"
         style={{ height: "200px" }}
       /> */}
-      <PaidIcon sx={{ color: "#ffff", fontSize: "200px" }}/>
+      <AssignmentIcon sx={{ color: "#ffff", fontSize: "200px" }}/>
 
       {/* <a
         target="_blank"

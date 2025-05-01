@@ -32,39 +32,41 @@ export default function Home(props) {
 
   useEffect(() => {
     // console.log("hola", hola);
-    fetchDataDollars();
+    // fetchDataDollars();
     // fetchDataInflation();
   }, []);
   return (
-    <div className="min-h-screen bg-[#1a202c] dark:bg-[#1a202c] p-7">
-      <div className="grid gap-6">
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-2 gap-4">
-          <CalculationBox dataInflation={dataInflation} />
-          <LineChart
-            dataInflation={dataInflation}
-            setDataInflation={setDataInflation}
-          />
-        </div>
-        {/* Elimina grid-rows-3 y h-[90vh] */}
-        {/* Primera fila */}
-        {/* <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+    // <div className="min-h-screen bg-[#1a202c] dark:bg-[#1a202c] p-7">
+    //   <div className="grid gap-6">
+    //     <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-2 gap-4">
+    //       <CalculationBox dataInflation={dataInflation} />
+    //       <LineChart
+    //         dataInflation={dataInflation}
+    //         setDataInflation={setDataInflation}
+    //       />
+    //     </div>
+    //     {/* Elimina grid-rows-3 y h-[90vh] */}
+    //     {/* Primera fila */}
+    //     {/* <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
             
-          </div> */}
-        {/* Segunda fila */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-          {dataDollars.map((dollar, index) => {
-            return (
-              <CurrencyBox
-                key={"dollar" + index}
-                type={dollar.casa}
-                buyPrice={dollar.compra}
-                sellPrice={dollar.venta}
-                spread={Math.round(dollar.venta - dollar.compra)}
-              />
-            );
-          })}
-        </div>
-      </div>
-    </div>
+    //       </div> */}
+    //     {/* Segunda fila */}
+    //     <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+    //       {dataDollars.map((dollar, index) => {
+    //         return (
+    //           <CurrencyBox
+    //             key={"dollar" + index}
+    //             type={dollar.casa}
+    //             buyPrice={dollar.compra}
+    //             sellPrice={dollar.venta}
+    //             spread={Math.round(dollar.venta - dollar.compra)}
+    //           />
+    //         );
+    //       })}
+    //     </div>
+    //   </div>
+    // </div>
+    <></>
+
   );
 }
