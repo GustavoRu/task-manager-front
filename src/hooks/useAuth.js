@@ -10,15 +10,15 @@ export const useAuth = ({ middleware, url }) => {
     data: user,
     error,
     mutate,
-  } = useSWR("/api/user", () =>
-    clientAxios("/api/user", {
-      headers: { Authorization: `Bearer ${token}` },
-    })
-      .then((res) => res.data)
-      .catch((error) => {
-        throw Error(error?.response?.data?.errors);
-      })
-  );
+  } = useSWR("/api/user", () => {
+    // clientAxios("/api/user", {
+    //   headers: { Authorization: `Bearer ${token}` },
+    // })
+    //   .then((res) => res.data)
+    //   .catch((error) => {
+    //     throw Error(error?.response?.data?.errors);
+    //   })
+  });
 
   const login = async (dataObj, setErrors) => {
     try {
@@ -34,7 +34,8 @@ export const useAuth = ({ middleware, url }) => {
 
   const register = async (dataObj, setErrors) => {
     try {
-      const { data } = await clientAxios.post("/api/register", dataObj);
+      console.log("dataObj", dataObj);
+      const { data } = await clientAxios.post("/api/Auth/register", dataObj);
       localStorage.setItem('AUTH_TOKEN', data.token);
       setErrors([]);
       await mutate();
@@ -49,7 +50,7 @@ export const useAuth = ({ middleware, url }) => {
         "/api/logout",
         {},
         {
-          headers: { Authorization: `Bearer ${token}` }, 
+          headers: { Authorization: `Bearer ${token}` },
         }
       );
       localStorage.removeItem('AUTH_TOKEN');
@@ -62,7 +63,7 @@ export const useAuth = ({ middleware, url }) => {
   useEffect(() => {
     console.log(middleware, url, user);
     if (middleware == "guest" && url && user) {
-        navigate(url);
+      navigate(url);
     }
     if (middleware == "auth" && error) {
       console.log("enviar a auth");
