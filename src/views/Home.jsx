@@ -140,6 +140,15 @@ export default function Home() {
     }
   };
 
+  // Estilo común para los botones de icono
+  const iconButtonStyle = {
+    backgroundColor: 'rgba(255, 255, 255, 0.1)',
+    color: 'white',
+    '&:hover': {
+      backgroundColor: 'rgba(255, 255, 255, 0.2)',
+    }
+  };
+
   return (
     <Container maxWidth="xl" sx={{ py: 4 }}>
       <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 3 }}>
@@ -153,12 +162,14 @@ export default function Home() {
             onChange={handleTaskViewChange}
             aria-label="Vista de tareas"
             sx={{
-              backgroundColor: 'rgba(255, 255, 255, 0.1)',
               '& .MuiToggleButton-root': {
-                color: 'white',
+                ...iconButtonStyle,
                 '&.Mui-selected': {
                   backgroundColor: 'rgba(99, 102, 241, 0.6)',
-                  color: 'white'
+                  color: 'white',
+                  '&:hover': {
+                    backgroundColor: 'rgba(99, 102, 241, 0.7)',
+                  }
                 }
               }
             }}
@@ -174,32 +185,36 @@ export default function Home() {
               </Tooltip>
             </ToggleButton>
           </ToggleButtonGroup>
+          
           <Tooltip title={showFilters ? "Ocultar filtros" : "Mostrar filtros"}>
             <IconButton 
               onClick={() => setShowFilters(!showFilters)}
               color={showFilters ? "secondary" : "primary"}
-              sx={{ backgroundColor: 'rgba(255, 255, 255, 0.1)' }}
+              sx={iconButtonStyle}
             >
               <FilterListIcon />
             </IconButton>
           </Tooltip>
+          
           <Tooltip title="Actualizar">
             <IconButton 
               onClick={loadTasks}
               color="primary"
-              sx={{ backgroundColor: 'rgba(255, 255, 255, 0.1)' }}
+              sx={iconButtonStyle}
             >
               <RefreshIcon />
             </IconButton>
           </Tooltip>
-          <Button 
-            variant="contained" 
-            color="primary"
-            startIcon={<AddIcon />}
-            onClick={handleOpenNewTask}
-          >
-            Nueva Tarea
-          </Button>
+          
+          <Tooltip title="Nueva tarea">
+            <IconButton 
+              onClick={handleOpenNewTask}
+              color="primary"
+              sx={iconButtonStyle}
+            >
+              <AddIcon />
+            </IconButton>
+          </Tooltip>
         </Box>
       </Box>
       
