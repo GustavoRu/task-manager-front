@@ -26,6 +26,7 @@ import PersonIcon from '@mui/icons-material/Person';
 import PeopleIcon from '@mui/icons-material/People';
 import TaskFormModal from "../components/TaskFormModal";
 import CardTask from "../components/CardTask";
+import ConfirmDialog from "../components/ConfirmDialog";
 
 export default function Home() {
   const theme = useTheme();
@@ -34,6 +35,13 @@ export default function Home() {
   const [openForm, setOpenForm] = useState(false);
   const [currentTask, setCurrentTask] = useState(null);
   const [taskView, setTaskView] = useState("all"); // Estado para manejar la vista (all / my)
+  
+  // Estado para el diálogo de confirmación
+  const [confirmDialog, setConfirmDialog] = useState({
+    open: false,
+    taskId: null,
+    taskTitle: ''
+  });
   
   // Estado para filtros
   const [filters, setFilters] = useState({
@@ -97,9 +105,25 @@ export default function Home() {
     setLoading(false);
   };
 
-  const handleDelete = async (id) => {
-    if (confirm("¿Estás seguro de eliminar esta tarea?")) {
-      const success = await deleteTask(id);
+  const handleOpenDeleteConfirm = (id, title) => {
+    setConfirmDialog({
+      open: true,
+      taskId: id,
+      taskTitle: title
+    });
+  };
+
+  const handleCloseDeleteConfirm = () => {
+    setConfirmDialog({
+      ...confirmDialog,
+      open: false
+    });
+  };
+
+  const handleDelete = async () => {
+    const { taskId } = confirmDialog;
+    if (taskId) {
+      const success = await deleteTask(taskId);
       if (success) {
         loadTasks(); // Recargar tareas solo después de eliminar exitosamente
       }
@@ -299,7 +323,7 @@ export default function Home() {
               key={task.id || task.taskId}
               task={task}
               onEdit={handleOpenEditTask}
-              onDelete={handleDelete}
+              onDelete={() => handleOpenDeleteConfirm(task.id || task.taskId, task.title || task.taskTitle)}
             />
           ))}
         </Grid>
@@ -320,6 +344,18 @@ export default function Home() {
         open={openForm} 
         handleClose={handleCloseForm} 
         task={currentTask}
+      />
+
+      {/* Dialog de confirmación para eliminar */}
+      <ConfirmDialog
+        open={confirmDialog.open}
+        onClose={handleCloseDeleteConfirm}
+        onConfirm={handleDelete}
+        title="Eliminar Tarea"
+        message={`¿Estás seguro de eliminar la tarea "${confirmDialog.taskTitle}"? Esta acción no se puede deshacer.`}
+        confirmText="Eliminar"
+        cancelText="Cancelar"
+        type="error"
       />
     </Container>
   );
