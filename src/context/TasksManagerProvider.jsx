@@ -37,7 +37,7 @@ const TasksManagerProvider = ({ children }) => {
         setErrors([]);
         
         // Cargar tareas después de login
-        // getTasks();
+        // getTasksAllTasks();
         
         // Redirigir a home
         navigate("/");
@@ -89,21 +89,32 @@ const TasksManagerProvider = ({ children }) => {
   };
 
   // Métodos de tareas
-  const getTasks = async () => {
+  const getTasksAllTasks = async () => {
     try {
       const token = localStorage.getItem("AUTH_TOKEN");
       if (!token) return;
       
-      const { data } = await clientAxios(`/api/tasks`);
+      const { data } = await clientAxios(`/api/Task/getall`);
       setTasks(data);
     } catch (error) {
       console.log(error);
     }
   };
 
+  const getMyTasks = async () => {
+    try {
+      const token = localStorage.getItem("AUTH_TOKEN");
+      if (!token) return;
+      const { data } = await clientAxios(`/api/Task/mytasks`);
+      setTasks(data);
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
   const addTask = async (task) => {
     try {
-      const { data } = await clientAxios.post('/api/tasks', task);
+      const { data } = await clientAxios.post('/api/Task/create', task);
       setTasks([...tasks, data]);
     } catch (error) {
       console.log(error);
@@ -112,7 +123,7 @@ const TasksManagerProvider = ({ children }) => {
 
   const updateTask = async (id, task) => {
     try {
-      const { data } = await clientAxios.put(`/api/tasks/${id}`, task);
+      const { data } = await clientAxios.put(`/api/Task/update/${id}`, task);
       setTasks(tasks.map(task => task.id === id ? data : task));
     } catch (error) {
       console.log(error);
@@ -121,7 +132,7 @@ const TasksManagerProvider = ({ children }) => {
 
   const deleteTask = async (id) => {
     try {
-      await clientAxios.delete(`/api/tasks/${id}`);
+      await clientAxios.delete(`/api/Task/delete/${id}`);
       setTasks(tasks.filter(task => task.id !== id));
     } catch (error) {
       console.log(error);
@@ -131,7 +142,7 @@ const TasksManagerProvider = ({ children }) => {
   // Cargar tareas solo si el usuario está autenticado
   useEffect(() => {
     if (user) {
-      getTasks();
+      getTasksAllTasks();
     }
   }, [user]);
 
@@ -141,7 +152,7 @@ const TasksManagerProvider = ({ children }) => {
       addTask,
       updateTask,
       deleteTask,
-      getTasks,
+      getTasksAllTasks,
       user,
       login,
       register,
