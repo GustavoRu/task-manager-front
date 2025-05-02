@@ -81,16 +81,24 @@ export default function TaskFormModal({ open, handleClose, task = null }) {
         // Crear nueva tarea
         await addTask(formData);
       }
-      handleClose();
+      // Pasar true para indicar que se guardó correctamente
+      handleClose(true);
     } catch (error) {
       console.error('Error al guardar la tarea:', error);
+      // Pasar false en caso de error
+      handleClose(false);
     }
+  };
+
+  const handleCancel = () => {
+    // Cerrar sin guardar cambios
+    handleClose(false);
   };
 
   return (
     <Dialog 
       open={open} 
-      onClose={handleClose}
+      onClose={handleCancel}
       maxWidth="sm"
       fullWidth
     >
@@ -140,7 +148,7 @@ export default function TaskFormModal({ open, handleClose, task = null }) {
         </Box>
       </DialogContent>
       <DialogActions>
-        <Button onClick={handleClose} color="error">
+        <Button onClick={handleCancel} color="error">
           Cancelar
         </Button>
         <Button onClick={handleSubmit} color="primary" variant="contained">

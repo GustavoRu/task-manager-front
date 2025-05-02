@@ -100,6 +100,7 @@ export default function Home() {
   const handleDelete = async (id) => {
     if (confirm("¿Estás seguro de eliminar esta tarea?")) {
       await deleteTask(id);
+      loadTasks(); // Recargar tareas después de eliminar
     }
   };
 
@@ -113,9 +114,11 @@ export default function Home() {
     setOpenForm(true);
   };
 
-  const handleCloseForm = () => {
+  const handleCloseForm = (taskSaved = false) => {
     setOpenForm(false);
-    loadTasks(); // Recargar tareas después de cerrar el formulario
+    if (taskSaved) {
+      loadTasks(); // Solo recargar tareas si se guardó una tarea
+    }
   };
   
   const handleFilterChange = (event) => {
