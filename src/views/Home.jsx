@@ -1,13 +1,6 @@
 import { useEffect, useState, useContext } from "react";
 import TasksManagerContext from "../context/TasksManagerProvider";
 import { 
-  Table, 
-  TableBody, 
-  TableCell, 
-  TableContainer, 
-  TableHead, 
-  TableRow, 
-  Paper, 
   Typography, 
   Button, 
   Box,
@@ -22,20 +15,20 @@ import {
   MenuItem,
   TextField,
   Grid,
-  useMediaQuery,
   useTheme,
-  Chip
+  Chip,
+  Paper,
+  Container
 } from "@mui/material";
 import DeleteIcon from '@mui/icons-material/Delete';
 import EditIcon from '@mui/icons-material/Edit';
 import AddIcon from '@mui/icons-material/Add';
 import RefreshIcon from '@mui/icons-material/Refresh';
 import FilterListIcon from '@mui/icons-material/FilterList';
-import TaskForm from "../components/TaskForm";
+import TaskFormModal from "../components/TaskFormModal";
 
 export default function Home() {
   const theme = useTheme();
-  const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
   const { tasks, getTasksAllTasks, deleteTask } = useContext(TasksManagerContext);
   const [loading, setLoading] = useState(true);
   const [openForm, setOpenForm] = useState(false);
@@ -148,58 +141,87 @@ export default function Home() {
     });
   };
   
-  // Renderiza una tarjeta para mostrar una tarea en dispositivos móviles
+  // Renderiza una tarjeta para mostrar una tarea
   const renderTaskCard = (task) => (
-    <Card key={task.id || task.taskId} sx={{ mb: 2, backgroundColor: "#2d3748", color: "white" }}>
-      <CardContent>
-        <Typography variant="h6" component="div" gutterBottom>
-          {task.title || task.taskTitle}
-        </Typography>
-        
-        <Box sx={{ mt: 1, mb: 2 }}>
-          <Chip 
-            label={task.isCompleted ? 'Completada' : 'Pendiente'} 
-            color={task.isCompleted ? 'success' : 'warning'} 
-            size="small"
-          />
-        </Box>
-        
-        <Typography variant="body2" sx={{ mb: 2 }}>
-          {task.description || task.taskDescription}
-        </Typography>
-        
-        <Typography variant="caption" display="block" sx={{ mb: 2, color: 'gray' }}>
-          Creada: {formatDate(task.createdAt || task.creationDate)}
-        </Typography>
-        
-        <Box sx={{ display: 'flex', justifyContent: 'space-between', mt: 2 }}>
-          <Button 
-            variant="contained" 
-            color="info" 
-            size="small"
-            startIcon={<EditIcon />}
-            onClick={() => handleOpenEditTask(task)}
-            sx={{ flex: 1, mr: 1 }}
-          >
-            Editar
-          </Button>
-          <Button 
-            variant="contained" 
-            color="error" 
-            size="small"
-            startIcon={<DeleteIcon />}
-            onClick={() => handleDelete(task.id || task.taskId)}
-            sx={{ flex: 1 }}
-          >
-            Eliminar
-          </Button>
-        </Box>
-      </CardContent>
-    </Card>
+    <Grid item xs={12} sm={6} md={4} lg={3} key={task.id || task.taskId}>
+      <Card sx={{ 
+        height: '100%', 
+        display: 'flex', 
+        flexDirection: 'column', 
+        backgroundColor: "#2d3748", 
+        color: "white",
+        transition: 'transform 0.2s, box-shadow 0.2s',
+        '&:hover': {
+          transform: 'translateY(-5px)',
+          boxShadow: '0 10px 20px rgba(0,0,0,0.2)'
+        }
+      }}>
+        <CardContent sx={{ flexGrow: 1, display: 'flex', flexDirection: 'column' }}>
+          <Typography variant="h6" component="div" gutterBottom sx={{ 
+            display: '-webkit-box',
+            WebkitLineClamp: 2,
+            WebkitBoxOrient: 'vertical',
+            overflow: 'hidden',
+            textOverflow: 'ellipsis',
+            lineHeight: 1.2,
+            mb: 2
+          }}>
+            {task.title || task.taskTitle}
+          </Typography>
+          
+          <Box sx={{ mt: 1, mb: 2 }}>
+            <Chip 
+              label={task.isCompleted ? 'Completada' : 'Pendiente'} 
+              color={task.isCompleted ? 'success' : 'warning'} 
+              size="small"
+            />
+          </Box>
+          
+          <Typography variant="body2" sx={{ 
+            mb: 2, 
+            flexGrow: 1,
+            display: '-webkit-box',
+            WebkitLineClamp: 3,
+            WebkitBoxOrient: 'vertical',
+            overflow: 'hidden',
+            textOverflow: 'ellipsis'
+          }}>
+            {task.description || task.taskDescription}
+          </Typography>
+          
+          <Typography variant="caption" display="block" sx={{ mb: 2, color: 'gray' }}>
+            Creada: {formatDate(task.createdAt || task.creationDate)}
+          </Typography>
+          
+          <Box sx={{ display: 'flex', justifyContent: 'space-between', mt: 'auto' }}>
+            <Button 
+              variant="contained" 
+              color="info" 
+              size="small"
+              startIcon={<EditIcon />}
+              onClick={() => handleOpenEditTask(task)}
+              sx={{ flex: 1, mr: 1 }}
+            >
+              Editar
+            </Button>
+            <Button 
+              variant="contained" 
+              color="error" 
+              size="small"
+              startIcon={<DeleteIcon />}
+              onClick={() => handleDelete(task.id || task.taskId)}
+              sx={{ flex: 1 }}
+            >
+              Eliminar
+            </Button>
+          </Box>
+        </CardContent>
+      </Card>
+    </Grid>
   );
 
   return (
-    <div className="container mx-auto p-4">
+    <Container maxWidth="xl" sx={{ py: 4 }}>
       <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 3 }}>
         <Typography variant="h4" component="h1" sx={{ color: "white" }}>
           Tareas
@@ -304,65 +326,9 @@ export default function Home() {
           <CircularProgress />
         </Box>
       ) : filteredTasks && filteredTasks.length > 0 ? (
-        isMobile ? (
-          // Vista de tarjetas para móviles
-          <Box>
-            {filteredTasks.map(task => renderTaskCard(task))}
-          </Box>
-        ) : (
-          // Vista de tabla para pantallas más grandes
-          <TableContainer component={Paper} sx={{ backgroundColor: "#2d3748", color: "white" }}>
-            <Table sx={{ minWidth: 650 }} aria-label="tasks table">
-              <TableHead>
-                <TableRow sx={{ backgroundColor: "#1a202c" }}>
-                  <TableCell sx={{ color: "white", fontWeight: "bold" }}>Título</TableCell>
-                  <TableCell sx={{ color: "white", fontWeight: "bold" }}>Descripción</TableCell>
-                  <TableCell sx={{ color: "white", fontWeight: "bold" }}>Estado</TableCell>
-                  <TableCell sx={{ color: "white", fontWeight: "bold" }}>Fecha de Creación</TableCell>
-                  <TableCell sx={{ color: "white", fontWeight: "bold" }}>Acciones</TableCell>
-                </TableRow>
-              </TableHead>
-              <TableBody>
-                {filteredTasks.map((task) => (
-                  <TableRow key={task.id || task.taskId}>
-                    <TableCell sx={{ color: "white" }}>{task.title || task.taskTitle}</TableCell>
-                    <TableCell sx={{ color: "white" }}>{task.description || task.taskDescription}</TableCell>
-                    <TableCell sx={{ color: "white" }}>
-                      <Chip 
-                        label={task.isCompleted ? 'Completada' : 'Pendiente'} 
-                        color={task.isCompleted ? 'success' : 'warning'} 
-                        size="small"
-                      />
-                    </TableCell>
-                    <TableCell sx={{ color: "white" }}>{formatDate(task.createdAt || task.creationDate)}</TableCell>
-                    <TableCell>
-                      <Box sx={{ display: 'flex', gap: 1 }}>
-                        <Button 
-                          variant="contained" 
-                          color="info" 
-                          size="small"
-                          startIcon={<EditIcon />}
-                          onClick={() => handleOpenEditTask(task)}
-                        >
-                          Editar
-                        </Button>
-                        <Button 
-                          variant="contained" 
-                          color="error" 
-                          size="small"
-                          startIcon={<DeleteIcon />}
-                          onClick={() => handleDelete(task.id || task.taskId)}
-                        >
-                          Eliminar
-                        </Button>
-                      </Box>
-                    </TableCell>
-                  </TableRow>
-                ))}
-              </TableBody>
-            </Table>
-          </TableContainer>
-        )
+        <Grid container spacing={3}>
+          {filteredTasks.map(task => renderTaskCard(task))}
+        </Grid>
       ) : (
         <Paper sx={{ p: 4, backgroundColor: "#2d3748", color: "white", textAlign: "center" }}>
           <Typography variant="h6">
@@ -374,11 +340,11 @@ export default function Home() {
       )}
 
       {/* Modal para crear/editar tareas */}
-      <TaskForm 
+      <TaskFormModal 
         open={openForm} 
         handleClose={handleCloseForm} 
         task={currentTask}
       />
-    </div>
+    </Container>
   );
 }

@@ -12,7 +12,7 @@ import {
 } from '@mui/material';
 import TasksManagerContext from '../context/TasksManagerProvider';
 
-export default function TaskForm({ open, handleClose, task = null }) {
+export default function TaskFormModal({ open, handleClose, task = null }) {
   const { addTask, updateTask } = useContext(TasksManagerContext);
   const [formData, setFormData] = useState({
     title: '',
