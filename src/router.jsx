@@ -9,7 +9,7 @@ import ProtectedRoute from "./components/ProtectedRoute";
 const router = createBrowserRouter([
   {
     path: "/",
-    element: <Layout />, // Layout con el Navbar
+    element: <Layout />, // layout con el Navbar
     children: [
       {
         index: true,
@@ -21,7 +21,7 @@ const router = createBrowserRouter([
       },
       {
         path: "auth",
-        element: <AuthLayout />, // AuthLayout sigue siendo hijo de Layout, por lo que mantiene el Navbar
+        element: <AuthLayout />, // authLayout sigue siendo hijo de Layout, por lo que mantiene el Navbar
         children: [
           {
             path: "login",

@@ -44,7 +44,7 @@ yarn install
 
 ### 4. Configurar variables de entorno
 
-Crea un archivo `.env.local` en la raíz del proyecto con las siguientes variables: (se commitea a fines de facilitar pruebas)
+Crea un archivo `.env.local` en la raíz del proyecto con las siguientes variables: 
 
 ```
 VITE_API_URL=http://localhost:5102/api

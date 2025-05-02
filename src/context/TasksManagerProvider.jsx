@@ -7,15 +7,15 @@ const TasksManagerProvider = ({ children }) => {
     const [tasks, setTasks] = useState([]);
     const [user, setUser] = useState(null);
     const [loading, setLoading] = useState(true);
-    // Estado para notificaciones
+
     const [notification, setNotification] = useState({
         open: false,
         message: '',
         type: 'success', // 'success' o 'error'
-        duration: 3000 // duración en milisegundos
+        duration: 3000
     });
 
-    // Función para mostrar notificación
+
     const showNotification = (message, type = 'success', duration = 5000) => {
         setNotification({
             open: true,
@@ -25,7 +25,6 @@ const TasksManagerProvider = ({ children }) => {
         });
     };
 
-    // Función para cerrar notificación
     const closeNotification = () => {
         setNotification({
             ...notification,
@@ -33,7 +32,7 @@ const TasksManagerProvider = ({ children }) => {
         });
     };
 
-    // Verificar autenticación al cargar
+    // verificar autenticación al cargar
     useEffect(() => {
         const checkAuth = () => {
             const token = localStorage.getItem("AUTH_TOKEN");
@@ -48,11 +47,11 @@ const TasksManagerProvider = ({ children }) => {
         checkAuth();
     }, []);
 
-    // Métodos de autenticación
+    // métodos de autenticación
     const login = async (dataObj, setErrors, navigate) => {
         try {
             const { data } = await clientAxios.post("/api/Auth/login/", dataObj);
-            console.log("ResponseLogin", data);
+
             if (data.isSuccess) {
                 localStorage.setItem("AUTH_TOKEN", data.token);
                 localStorage.setItem("USER_NAME", data.userName);
@@ -71,23 +70,18 @@ const TasksManagerProvider = ({ children }) => {
 
             setErrors([!data?.token ? "Usuario o contraseña incorrectos" : ""]);
         } catch (error) {
-            console.log("errorLogin:", error);
+
             setErrors(Object.values(error.response?.data?.errors || { error: "Error al iniciar sesión" }));
-            // showNotification('Error al iniciar sesión', 'error');
+
         }
     };
 
     const register = async (dataObj, setErrors, navigate) => {
         try {
-            console.log("dataObjRegister", dataObj);
             const { data } = await clientAxios.post("/api/Auth/register/", dataObj);
 
             if (data.isSuccess) {
-                // localStorage.setItem("AUTH_TOKEN", data.token);
-                // localStorage.setItem("USER_NAME", data.userName || dataObj.name);
 
-                // // Actualizar estado del usuario
-                // setUser({ token: data.token, userName: data.userName || dataObj.name });
                 setErrors([]);
                 showNotification('Registro exitoso. Ahora puedes iniciar sesión.');
 
@@ -95,21 +89,19 @@ const TasksManagerProvider = ({ children }) => {
                 // navigate("/");
             } else {
                 setErrors(["No se pudo completar el registro"]);
-                // showNotification('No se pudo completar el registro', 'error');
             }
         } catch (error) {
-            console.log("error:", error);
             setErrors(Object.values(error.response?.data?.errors || { error: "Error al registrarse" }));
-            // showNotification('Error al registrarse', 'error');
+
         }
     };
 
     const logout = (navigate) => {
-        // Limpiar localStorage
+
         localStorage.removeItem('AUTH_TOKEN');
         localStorage.removeItem('USER_NAME');
         localStorage.removeItem('USER_ID');
-        // Actualizar estado
+
         setUser(null);
         setTasks([]);
 
@@ -126,7 +118,6 @@ const TasksManagerProvider = ({ children }) => {
             const { data } = await clientAxios(`/api/Task/getall`);
             setTasks(data);
         } catch (error) {
-            console.log(error);
             showNotification('Error al cargar todas las tareas', 'error');
         }
     };
@@ -138,7 +129,6 @@ const TasksManagerProvider = ({ children }) => {
             const { data } = await clientAxios(`/api/Task/mytasks`);
             setTasks(data);
         } catch (error) {
-            console.log(error);
             showNotification('Error al cargar tus tareas', 'error');
         }
     }
@@ -150,7 +140,6 @@ const TasksManagerProvider = ({ children }) => {
             showNotification('Tarea creada correctamente');
             return true;
         } catch (error) {
-            console.log(error);
             showNotification('Error al crear la tarea', 'error');
             return false;
         }
@@ -159,13 +148,11 @@ const TasksManagerProvider = ({ children }) => {
     const updateTask = async (id, task) => {
         try {
             let response = await clientAxios.put(`/api/Task/update/${id}`, task);
-            console.log("responseUpdateTask", response);
             const { data } = response;
             setTasks(tasks.map(task => task.taskId === id ? data : task));
             showNotification('Tarea actualizada correctamente');
             return true;
         } catch (error) {
-            console.log(error);
             showNotification('Error al actualizar la tarea', 'error');
             return false;
         }
@@ -174,12 +161,10 @@ const TasksManagerProvider = ({ children }) => {
     const deleteTask = async (id) => {
         try {
             let response = await clientAxios.delete(`/api/Task/delete/${id}`);
-            console.log("responseDeleteTask", response);
             setTasks(tasks.filter(task => task.taskId !== id));
             showNotification('Tarea eliminada correctamente');
             return true;
         } catch (error) {
-            console.log(error);
             showNotification('Error al eliminar la tarea', 'error');
             return false;
         }
