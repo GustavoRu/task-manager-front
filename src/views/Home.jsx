@@ -1,16 +1,7 @@
 import { useEffect, useState } from "react";
-import LineChart from "../components/LineChart";
-import CurrencyBox from "../components/CurrencyBox";
-import CalculationBox from "../components/CalculationBox";
-// import useInflation from "../hooks/useInflation";
+
 
 export default function Home(props) {
-  // const { dollarRates } = useInflation(); //fines didacticos de practica con context
-  const [dataDollars, setDataDollars] = useState([]);
-  const [dataInflation, setDataInflation] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
-  const [errorInflation, setErrorInflation] = useState(null);
 
   // const fetchDataDollars = () => {
   //   fetch("https://dolarapi.com/v1/dolares")
@@ -32,8 +23,7 @@ export default function Home(props) {
 
   useEffect(() => {
     // console.log("hola", hola);
-    // fetchDataDollars();
-    // fetchDataInflation();
+ 
   }, []);
   return (
     // <div className="min-h-screen bg-[#1a202c] dark:bg-[#1a202c] p-7">
