@@ -7,8 +7,6 @@ import {
   CircularProgress,
   IconButton,
   Tooltip,
-  Card,
-  CardContent,
   FormControl,
   InputLabel,
   Select,
@@ -16,16 +14,14 @@ import {
   TextField,
   Grid,
   useTheme,
-  Chip,
   Paper,
   Container
 } from "@mui/material";
-import DeleteIcon from '@mui/icons-material/Delete';
-import EditIcon from '@mui/icons-material/Edit';
 import AddIcon from '@mui/icons-material/Add';
 import RefreshIcon from '@mui/icons-material/Refresh';
 import FilterListIcon from '@mui/icons-material/FilterList';
 import TaskFormModal from "../components/TaskFormModal";
+import CardTask from "../components/CardTask";
 
 export default function Home() {
   const theme = useTheme();
@@ -128,97 +124,6 @@ export default function Home() {
       dateTo: ""
     });
   };
-
-  const formatDate = (dateString) => {
-    if (!dateString) return "N/A";
-    const date = new Date(dateString);
-    return date.toLocaleDateString('es-ES', { 
-      year: 'numeric', 
-      month: 'long', 
-      day: 'numeric',
-      hour: '2-digit',
-      minute: '2-digit'
-    });
-  };
-  
-  // Renderiza una tarjeta para mostrar una tarea
-  const renderTaskCard = (task) => (
-    <Grid item xs={12} sm={6} md={4} lg={3} key={task.id || task.taskId}>
-      <Card sx={{ 
-        height: '100%', 
-        display: 'flex', 
-        flexDirection: 'column', 
-        backgroundColor: "#2d3748", 
-        color: "white",
-        transition: 'transform 0.2s, box-shadow 0.2s',
-        '&:hover': {
-          transform: 'translateY(-5px)',
-          boxShadow: '0 10px 20px rgba(0,0,0,0.2)'
-        }
-      }}>
-        <CardContent sx={{ flexGrow: 1, display: 'flex', flexDirection: 'column' }}>
-          <Typography variant="h6" component="div" gutterBottom sx={{ 
-            display: '-webkit-box',
-            WebkitLineClamp: 2,
-            WebkitBoxOrient: 'vertical',
-            overflow: 'hidden',
-            textOverflow: 'ellipsis',
-            lineHeight: 1.2,
-            mb: 2
-          }}>
-            {task.title || task.taskTitle}
-          </Typography>
-          
-          <Box sx={{ mt: 1, mb: 2 }}>
-            <Chip 
-              label={task.isCompleted ? 'Completada' : 'Pendiente'} 
-              color={task.isCompleted ? 'success' : 'warning'} 
-              size="small"
-            />
-          </Box>
-          
-          <Typography variant="body2" sx={{ 
-            mb: 2, 
-            flexGrow: 1,
-            display: '-webkit-box',
-            WebkitLineClamp: 3,
-            WebkitBoxOrient: 'vertical',
-            overflow: 'hidden',
-            textOverflow: 'ellipsis'
-          }}>
-            {task.description || task.taskDescription}
-          </Typography>
-          
-          <Typography variant="caption" display="block" sx={{ mb: 2, color: 'gray' }}>
-            Creada: {formatDate(task.createdAt || task.creationDate)}
-          </Typography>
-          
-          <Box sx={{ display: 'flex', justifyContent: 'space-between', mt: 'auto' }}>
-            <Button 
-              variant="contained" 
-              color="info" 
-              size="small"
-              startIcon={<EditIcon />}
-              onClick={() => handleOpenEditTask(task)}
-              sx={{ flex: 1, mr: 1 }}
-            >
-              Editar
-            </Button>
-            <Button 
-              variant="contained" 
-              color="error" 
-              size="small"
-              startIcon={<DeleteIcon />}
-              onClick={() => handleDelete(task.id || task.taskId)}
-              sx={{ flex: 1 }}
-            >
-              Eliminar
-            </Button>
-          </Box>
-        </CardContent>
-      </Card>
-    </Grid>
-  );
 
   return (
     <Container maxWidth="xl" sx={{ py: 4 }}>
@@ -327,7 +232,14 @@ export default function Home() {
         </Box>
       ) : filteredTasks && filteredTasks.length > 0 ? (
         <Grid container spacing={3}>
-          {filteredTasks.map(task => renderTaskCard(task))}
+          {filteredTasks.map(task => (
+            <CardTask 
+              key={task.id || task.taskId}
+              task={task}
+              onEdit={handleOpenEditTask}
+              onDelete={handleDelete}
+            />
+          ))}
         </Grid>
       ) : (
         <Paper sx={{ p: 4, backgroundColor: "#2d3748", color: "white", textAlign: "center" }}>
