@@ -3,10 +3,8 @@ import Navbar from "./Navbar";
 import { useAuth } from "../hooks/useAuth";
 
 export default function Layout() {
-  const { user, error } = useAuth({ middleware: "auth" });
-  console.log("USER:", user);
-  console.log("error:", error);
-
+  const { user, loading } = useAuth({ middleware: "auth" });
+  
   return (
     <div>
       <Navbar />

@@ -1,90 +1,40 @@
-import { useEffect } from "react";
-import clientAxios from "../config/axios";
-import useSWR from "swr";
+import { useContext, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
+import TasksManagerContext from "../context/TasksManagerProvider";
 
 export const useAuth = ({ middleware, url }) => {
+  const { user, login, register, logout, loading } = useContext(TasksManagerContext);
   const navigate = useNavigate();
-  const token = localStorage.getItem("AUTH_TOKEN");
-  const {
-    data: user,
-    error,
-    mutate,
-  } = useSWR("/api/user", () => {
-    // clientAxios("/api/user", {
-    //   headers: { Authorization: `Bearer ${token}` },
-    // })
-    //   .then((res) => res.data)
-    //   .catch((error) => {
-    //     throw Error(error?.response?.data?.errors);
-    //   })
-  });
 
-  const login = async (dataObj, setErrors) => {
-    try {
-      const { data } = await clientAxios.post("/api/Auth/login/", dataObj);
-      console.log("ReponseLogin", data);
-      if (data.isSuccess) {
-        localStorage.setItem("AUTH_TOKEN", data.token);
-        setErrors([]);
-        // await mutate();
-        return;
-      }
-      
-      setErrors([!data?.token ? "Usuario o contraseña incorrectos" : ""]);
-
-    } catch (error) {
-      console.log("errorLogin:", error);
-      // let errors = 
-      setErrors(Object.values(error.response.data.errors));
-    }
+  const handleLogin = async (dataObj, setErrors) => {
+    await login(dataObj, setErrors, navigate);
   };
 
-  const register = async (dataObj, setErrors) => {
-    try {
-      console.log("dataObjRegister", dataObj);
-      const { data } = await clientAxios.post("/api/Auth/register/", dataObj);
-      localStorage.setItem('AUTH_TOKEN', data.token);
-      setErrors([]);
-      // await mutate();
-    } catch (error) {
-      console.log("error:", error);
-      setErrors(Object.values(error.response.data.errors));
-    }
+  const handleRegister = async (dataObj, setErrors) => {
+    await register(dataObj, setErrors, navigate);
   };
 
-  const logout = async () => {
-    try {
-      await clientAxios.post(
-        "/api/logout",
-        {},
-        {
-          headers: { Authorization: `Bearer ${token}` },
-        }
-      );
-      localStorage.removeItem('AUTH_TOKEN');
-      await mutate(undefined);
-    } catch (error) {
-      throw Error(error?.response?.data?.errors);
-    }
+  const handleLogout = () => {
+    logout(navigate);
   };
 
   useEffect(() => {
-    console.log(middleware, url, user);
-    if (middleware == "guest" && url && user) {
+    // Si el usuario está autenticado y está en una ruta de invitado, redirigir a url
+    if (middleware === "guest" && url && user && !loading) {
       navigate(url);
     }
-    if (middleware == "auth" && error) {
-      console.log("enviar a auth");
-      //   navigate('auth/login');
+    
+    // Si el usuario no está autenticado y está en una ruta protegida, redirigir a login
+    if (middleware === "auth" && !user && !loading) {
+      navigate('/auth/login');
     }
-  }, [user, error]);
+  }, [user, loading, middleware, url, navigate]);
 
   return {
-    login,
-    register,
-    logout,
+    login: handleLogin,
+    register: handleRegister,
+    logout: handleLogout,
     user,
-    error,
+    loading
   };
 };
