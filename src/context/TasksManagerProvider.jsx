@@ -156,6 +156,7 @@ const TasksManagerProvider = ({ children }) => {
             updateTask,
             deleteTask,
             getTasksAllTasks,
+            getMyTasks,
             user,
             login,
             register,

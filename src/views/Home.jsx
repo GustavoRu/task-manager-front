@@ -15,20 +15,25 @@ import {
   Grid,
   useTheme,
   Paper,
-  Container
+  Container,
+  ToggleButtonGroup,
+  ToggleButton
 } from "@mui/material";
 import AddIcon from '@mui/icons-material/Add';
 import RefreshIcon from '@mui/icons-material/Refresh';
 import FilterListIcon from '@mui/icons-material/FilterList';
+import PersonIcon from '@mui/icons-material/Person';
+import PeopleIcon from '@mui/icons-material/People';
 import TaskFormModal from "../components/TaskFormModal";
 import CardTask from "../components/CardTask";
 
 export default function Home() {
   const theme = useTheme();
-  const { tasks, getTasksAllTasks, deleteTask } = useContext(TasksManagerContext);
+  const { tasks, getTasksAllTasks, getMyTasks, deleteTask, user } = useContext(TasksManagerContext);
   const [loading, setLoading] = useState(true);
   const [openForm, setOpenForm] = useState(false);
   const [currentTask, setCurrentTask] = useState(null);
+  const [taskView, setTaskView] = useState("all"); // Estado para manejar la vista (all / my)
   
   // Estado para filtros
   const [filters, setFilters] = useState({
@@ -45,7 +50,7 @@ export default function Home() {
 
   useEffect(() => {
     loadTasks();
-  }, []);
+  }, [taskView]);
   
   // Efecto para aplicar filtros cuando cambian las tareas o los filtros
   useEffect(() => {
@@ -84,7 +89,11 @@ export default function Home() {
 
   const loadTasks = async () => {
     setLoading(true);
-    await getTasksAllTasks();
+    if (taskView === "my") {
+      await getMyTasks();
+    } else {
+      await getTasksAllTasks();
+    }
     setLoading(false);
   };
 
@@ -124,6 +133,12 @@ export default function Home() {
       dateTo: ""
     });
   };
+  
+  const handleTaskViewChange = (event, newView) => {
+    if (newView !== null) {
+      setTaskView(newView);
+    }
+  };
 
   return (
     <Container maxWidth="xl" sx={{ py: 4 }}>
@@ -132,6 +147,33 @@ export default function Home() {
           Tareas
         </Typography>
         <Box sx={{ display: 'flex', gap: 2 }}>
+          <ToggleButtonGroup
+            value={taskView}
+            exclusive
+            onChange={handleTaskViewChange}
+            aria-label="Vista de tareas"
+            sx={{
+              backgroundColor: 'rgba(255, 255, 255, 0.1)',
+              '& .MuiToggleButton-root': {
+                color: 'white',
+                '&.Mui-selected': {
+                  backgroundColor: 'rgba(99, 102, 241, 0.6)',
+                  color: 'white'
+                }
+              }
+            }}
+          >
+            <ToggleButton value="all" aria-label="Todas las tareas">
+              <Tooltip title="Todas las tareas">
+                <PeopleIcon />
+              </Tooltip>
+            </ToggleButton>
+            <ToggleButton value="my" aria-label="Mis tareas">
+              <Tooltip title="Mis tareas">
+                <PersonIcon />
+              </Tooltip>
+            </ToggleButton>
+          </ToggleButtonGroup>
           <Tooltip title={showFilters ? "Ocultar filtros" : "Mostrar filtros"}>
             <IconButton 
               onClick={() => setShowFilters(!showFilters)}
@@ -246,7 +288,9 @@ export default function Home() {
           <Typography variant="h6">
             {tasks && tasks.length > 0 
               ? "No se encontraron tareas con los filtros aplicados" 
-              : "No hay tareas disponibles. ¡Crea una nueva tarea!"}
+              : taskView === "my" 
+                ? "No tienes tareas asignadas. ¡Crea una nueva tarea!" 
+                : "No hay tareas disponibles. ¡Crea una nueva tarea!"}
           </Typography>
         </Paper>
       )}
