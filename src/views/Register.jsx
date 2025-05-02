@@ -18,7 +18,7 @@ export default function Register() {
       name: nameRef.current.value,
       email: emailRef.current.value,
       password: passwordRef.current.value,
-      password_confirmation: passwordConfirmationRef.current.value,
+      // password_confirmation: passwordConfirmationRef.current.value,
     };
     register(dataObj, setErrors)
   };
@@ -83,7 +83,7 @@ export default function Register() {
               ref={passwordRef}
             />
           </div>
-          <div className="mb-4">
+          {/* <div className="mb-4">
             <label
               className="text-slate-800 dark:text-gray-300"
               htmlFor="password_confirmation"
@@ -98,7 +98,7 @@ export default function Register() {
               placeholder="Repetir Password"
               ref={passwordConfirmationRef}
             />
-          </div>
+          </div> */}
 
           <input
             type="submit"

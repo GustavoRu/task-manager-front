@@ -124,7 +124,7 @@ const TasksManagerProvider = ({ children }) => {
   const updateTask = async (id, task) => {
     try {
       const { data } = await clientAxios.put(`/api/Task/update/${id}`, task);
-      setTasks(tasks.map(task => task.id === id ? data : task));
+      setTasks(tasks.map(task => task.taskId === id ? data : task));
     } catch (error) {
       console.log(error);
     }
@@ -133,7 +133,7 @@ const TasksManagerProvider = ({ children }) => {
   const deleteTask = async (id) => {
     try {
       await clientAxios.delete(`/api/Task/delete/${id}`);
-      setTasks(tasks.filter(task => task.id !== id));
+      setTasks(tasks.filter(task => task.taskId !== id));
     } catch (error) {
       console.log(error);
     }
