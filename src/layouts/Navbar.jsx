@@ -91,12 +91,12 @@ export default function Navbar() {
                     aria-label="cerrar sesión"
                     size="small"
                     sx={{ 
-                      color: "#6366f1", // Color indigo-600 de Tailwind
+                      color: "#6366f1", 
                       "&.MuiIconButton-root:hover": {
-                        backgroundColor: "rgba(99, 102, 241, 0.1)" // Fondo semitransparente del mismo color
+                        backgroundColor: "rgba(99, 102, 241, 0.1)" 
                       },
                       "@media (prefers-color-scheme: dark)": {
-                        color: "#818cf8" // Color indigo-400 para dark mode
+                        color: "#818cf8"
                       }
                     }}
                   >
