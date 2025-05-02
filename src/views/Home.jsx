@@ -99,8 +99,10 @@ export default function Home() {
 
   const handleDelete = async (id) => {
     if (confirm("¿Estás seguro de eliminar esta tarea?")) {
-      await deleteTask(id);
-      loadTasks(); // Recargar tareas después de eliminar
+      const success = await deleteTask(id);
+      if (success) {
+        loadTasks(); // Recargar tareas solo después de eliminar exitosamente
+      }
     }
   };
 

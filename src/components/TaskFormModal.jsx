@@ -74,18 +74,22 @@ export default function TaskFormModal({ open, handleClose, task = null }) {
     if (!validateForm()) return;
     
     try {
+      let success = false;
+      
       if (task) {
         // Actualizar tarea existente
-        await updateTask(task.id || task.taskId, formData);
+        success = await updateTask(task.id || task.taskId, formData);
       } else {
         // Crear nueva tarea
-        await addTask(formData);
+        success = await addTask(formData);
       }
-      // Pasar true para indicar que se guardó correctamente
-      handleClose(true);
+      
+      // Las notificaciones ya se manejan en el contexto
+      // Solo cerramos el modal y notificamos al componente padre
+      handleClose(success);
     } catch (error) {
-      console.error('Error al guardar la tarea:', error);
-      // Pasar false en caso de error
+      // En caso de un error no manejado
+      console.error('Error inesperado:', error);
       handleClose(false);
     }
   };
