@@ -2,6 +2,8 @@ import React from "react";
 import AssignmentIcon from "@mui/icons-material/Assignment";
 import { Link } from "react-router-dom";
 import { useAuth } from "../hooks/useAuth";
+import { IconButton, Tooltip } from "@mui/material";
+import LogoutIcon from '@mui/icons-material/Logout';
 
 export default function Navbar() {
   const { user, logout } = useAuth({ middleware: "none" });
@@ -83,15 +85,24 @@ export default function Navbar() {
                 <span className="me-3 text-indigo-600 dark:text-indigo-400">
                   {user.userName}
                 </span>
-                <button
-                  onClick={logout}
-                  type="button"
-                  data-twe-ripple-init
-                  data-twe-ripple-color="light"
-                  className="me-3 inline-block rounded bg-indigo-600 px-6 pb-2 pt-2.5 text-xs font-medium uppercase leading-normal text-white shadow-primary-3 transition duration-150 ease-in-out hover:bg-indigo-700"
-                >
-                  Cerrar Sesión
-                </button>
+                <Tooltip title="Cerrar Sesión">
+                  <IconButton
+                    onClick={logout}
+                    aria-label="cerrar sesión"
+                    size="small"
+                    sx={{ 
+                      color: "#6366f1", // Color indigo-600 de Tailwind
+                      "&.MuiIconButton-root:hover": {
+                        backgroundColor: "rgba(99, 102, 241, 0.1)" // Fondo semitransparente del mismo color
+                      },
+                      "@media (prefers-color-scheme: dark)": {
+                        color: "#818cf8" // Color indigo-400 para dark mode
+                      }
+                    }}
+                  >
+                    <LogoutIcon />
+                  </IconButton>
+                </Tooltip>
               </>
             ) : (
               // Si el usuario no está autenticado

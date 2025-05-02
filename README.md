@@ -86,11 +86,6 @@ npm run preview
 yarn preview
 ```
 
-## Estructura del proyecto
-
-```
-
-```
 
 ## Tecnologías utilizadas
 
