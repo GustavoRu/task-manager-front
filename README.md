@@ -47,7 +47,7 @@ yarn install
 Crea un archivo `.env.local` en la raíz del proyecto con las siguientes variables: 
 
 ```
-VITE_API_URL=http://localhost:5102/api
+VITE_API_URL=http://localhost:5102
 ```
 
 Ajusta la URL según la configuración de tu API backend.
